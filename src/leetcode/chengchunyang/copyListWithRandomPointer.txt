@@ -1,0 +1,55 @@
+/**
+ * Definition for singly-linked list with a random pointer.
+ * struct RandomListNode {
+ *     int label;
+ *     RandomListNode *next, *random;
+ *     RandomListNode(int x) : label(x), next(NULL), random(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    RandomListNode *copyRandomList(RandomListNode *head) {
+        cloneNodes(head);
+        ConnectNodes(head);
+        return ReconnectNodes(head);
+    }
+    void cloneNodes(RandomListNode *head){
+        RandomListNode *pNode = head;
+        while(pNode != nullptr){
+            RandomListNode *pCloned = new RandomListNode(pNode->label);
+            pCloned->next = pNode->next;
+            pCloned->random = pNode->random;
+            
+            pNode->next = pCloned;
+            pNode = pCloned->next;
+        }
+    }
+    void ConnectNodes(RandomListNode *head){
+        RandomListNode *pNode = head;
+        while(pNode!=nullptr){
+            RandomListNode *pCloned = pNode->next;
+            if(pNode->random != nullptr){
+                pCloned->random = pNode->random->next;
+            }
+            pNode = pCloned->next;
+        }
+    }
+    RandomListNode *ReconnectNodes(RandomListNode *head){
+        RandomListNode *pNode = head;
+        RandomListNode *pClonedHead = nullptr;
+        RandomListNode *pClonedNode = nullptr;
+        if(head != nullptr){
+            pClonedHead = pClonedNode = pNode->next;
+            pNode->next = pClonedNode->next;
+            pNode = pNode->next;
+        }
+        while(pNode!=nullptr){
+            pClonedNode->next = pNode->next;
+            pClonedNode = pClonedNode->next;
+            pNode->next = pClonedNode->next;
+            pNode = pNode->next;
+        }
+        return pClonedHead;
+    }
+    
+};
